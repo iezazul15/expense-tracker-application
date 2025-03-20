@@ -1,0 +1,82 @@
+<%- include('../partials/header') %>
+    <div class="container">
+        <div class="my-4">
+            <h4 id="heading">Create New Expense Tracker</h4>
+            <form id="create-expense-form" action="/tracker" method="post">
+                <div class="form-group my-3">
+                    <label for="name" class="mb-2">Expense Name</label>
+                    <input id="name" type="text" name="name" placeholder="Enter expense name" class="form-control <%= error.name ? 'is-invalid' : '' %>">
+                    <div class="invalid-feedback">
+                        <%= error.name %>
+                    </div>
+                </div>
+                <div class="form-group my-3">
+                    <label for="amount" class="mb-2">Expense Amount</label>
+                    <input id="amount" type="text" name="expense" placeholder="Enter expense amount" class="form-control <%= error.expense ? 'is-invalid' : '' %>">
+                    <div class="invalid-feedback">
+                        <%= error.expense %>
+                    </div>
+                </div>
+                <div class="form-group my-3">
+                    <label for="savings" class="mb-2">Savings (If any)</label>
+                    <input id="savings" type="text" name="savings" placeholder="Enter savings amount" class="form-control">
+                </div>
+                <div class="form-group my-3">
+                    <label for="autoSizingSelect" class="mb-2">Expense Type</label>
+                    <select class="form-select <%= error.type ? 'is-invalid' : '' %>" id="autoSizingSelect" name="type">
+                    <option selected value="Choose" disabled>Choose...</option>
+                    <option value="health">Heath</option>
+                    <option value="education">Education</option>
+                    <option value="personal">Personal</option>
+                    <option value="others">Others</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        <%= error.type %>
+                    </div>
+                </div>
+                <div class="form-group my-3">
+                    <input type="hidden" name="id" value="">
+                </div>
+                <div class="form-group me-3">
+                    <input id="create-or-update" type="submit" class="btn btn-dark btn-sm" value="Create">
+                    <button id="reset-btn" class="btn btn-danger btn-sm d-none">Reset</button>
+                </div>
+            </form>
+        </div>
+        <div>
+            <% if (expenses.length === 0) { %>
+                <h4>No Expense created yet</h4>
+            <% } else { %>
+                <h4>Your Expenses</h4>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Expense</th>
+                        <th scope="col">Savings</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <% expenses.forEach(expense => { %>
+                            <tr>
+                                <td><%= expense.name %></td>
+                                <td><span class="text-danger fw-semibold">-<%= expense.expenseAmount %>৳</span></td>
+                                <td><span class="text-success fw-semibold">+<%= expense.savingsAmount %>৳</span></td>
+                                <td><%= expense.type %></td>
+                                <td><span class="fw-semibold text-success-emphasis"><%= parseFloat(expense.expenseAmount) - parseFloat(expense.savingsAmount) %>৳</span></td>
+                                <td>
+                                    <a href="/tracker/delete/<%= expense._id %>" class="btn btn-outline-danger btn-sm">Delete</a>
+                                    <button class="btn btn-dark btn-sm edit-btn"  data-name="<%= expense.name %>" data-expense="<%= expense.expenseAmount %>" data-savings="<%= expense.savingsAmount %>" data-type="<%= expense.type %>" data-id="<%= expense._id %>">Edit</button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+    </div>
+
+<%- include('../partials/footer') %>
